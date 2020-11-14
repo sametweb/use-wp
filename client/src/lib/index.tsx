@@ -1,128 +1,62 @@
+import { useEffect, useReducer, useState } from "react";
 import Axios, { AxiosResponse } from "axios";
-import { useEffect, useReducer } from "react";
-import { DEFAULT_STATE } from "./context";
-import reducer from "./reducer";
+import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
+import { DEFAULT_PAGES, pagesReducer } from "./pagesReducer";
+import { commentsReducer, DEFAULT_COMMENTS } from "./commentsReducer";
 
-export interface IPost {
-  id: number;
-  date: string;
-  modified: string;
-  slug: string;
-  status: string;
-  type: "post" | "page";
-  title: { rendered: string };
-  excerpt: { rendered: string };
-  content: { rendered: string };
-  tags: Array<string>;
-}
+export function usePosts(url: string) {
+  const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
 
-export interface IPage {
-  id: number;
-  date: string;
-  modified: string;
-  slug: string;
-  status: string;
-  type: "post" | "page";
-  title: { rendered: string };
-  excerpt: { rendered: string };
-  content: { rendered: string };
-}
-
-export interface IComment {
-  id: number;
-  date: string;
-  author_name: string;
-  content: { rendered: string };
-  author_avatar_urls: {
-    "24": string;
-    "48": string;
-    "96": string;
-  };
-}
-
-export function useWp(url: string) {
-  const [state, dispatch] = useReducer(reducer, DEFAULT_STATE);
+  const fetchPosts = Axios.get(url + "/posts");
 
   useEffect(() => {
-    const postsRequest = Axios.get(url + "/posts");
-    const pagesRequest = Axios.get(url + "/pages");
-    const commentsRequest = Axios.get(url + "/comments");
-
-    dispatch({
-      type: "GET_ALL_START",
-    });
-
-    Axios.all([postsRequest, pagesRequest, commentsRequest])
-      .then((response: AxiosResponse<any>[]) => {
-        const [
-          { data: allPosts },
-          { data: allPages },
-          { data: allComments },
-        ] = response;
-
-        dispatch({
-          type: "GET_ALL_SUCCESS",
-          payload: { allPosts, allPages, allComments },
-        });
+    dispatch({ type: "GET_POSTS_START" });
+    fetchPosts
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_POSTS_SUCCESS", payload: response.data });
       })
       .catch(() => {
-        dispatch({
-          type: "GET_ALL_ERROR",
-          payload: "Error fetching posts.",
-        });
+        dispatch({ type: "GET_POSTS_ERROR" });
       });
-  }, [url]);
+  }, []);
 
-  const getPosts = () => {
-    return state.allPosts.data.map((post) => {
-      return {
-        id: post.id,
-        date: post.date,
-        modified: post.modified,
-        slug: post.slug,
-        status: post.status,
-        title: post.title.rendered,
-        excerpt: post.excerpt.rendered,
-        content: post.content.rendered,
-        tags: post.tags,
-      };
-    });
-  };
+  return [state.data, state.loading, state.error];
+}
 
-  const getPages = () => {
-    return state.allPages.data.map((page) => {
-      return {
-        id: page.id,
-        date: page.date,
-        modified: page.modified,
-        slug: page.slug,
-        status: page.status,
-        title: page.title.rendered,
-        excerpt: page.excerpt.rendered,
-        content: page.content.rendered,
-      };
-    });
-  };
+export function usePages(url: string) {
+  const [state, dispatch] = useReducer(pagesReducer, DEFAULT_PAGES);
 
-  const getComments = () => {
-    return state.allComments.data.map((comment) => {
-      return {
-        id: comment.id,
-        date: comment.date,
-        author_name: comment.author_name,
-        content: comment.content.rendered,
-        avatar: comment.author_avatar_urls["48"],
-      };
-    });
-  };
+  const fetchPages = Axios.get(url + "/pages");
 
-  const getPostComments = (id: number) => {
-    const postCommentsURL = url + "/comments?post=" + id;
-    dispatch({
-      type: "GET_POST_COMMENTS_START",
-    });
-    Axios.get<AxiosResponse<any>>(postCommentsURL).then(({ data }) => {});
-  };
+  useEffect(() => {
+    dispatch({ type: "GET_PAGES_START" });
+    fetchPages
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_PAGES_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_PAGES_ERROR" });
+      });
+  }, []);
 
-  return { getPosts, getPages, getComments, getPostComments };
+  return [state.data, state.loading, state.error];
+}
+
+export function useComments(url: string) {
+  const [state, dispatch] = useReducer(commentsReducer, DEFAULT_COMMENTS);
+
+  const fetchComments = Axios.get(url + "/comments");
+
+  useEffect(() => {
+    dispatch({ type: "GET_COMMENTS_START" });
+    fetchComments
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_COMMENTS_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_COMMENTS_ERROR" });
+      });
+  }, []);
+
+  return [state.data, state.loading, state.error];
 }

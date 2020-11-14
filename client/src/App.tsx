@@ -1,21 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { useWp } from "./lib/index";
+import { useComments, usePages, usePosts } from "./lib/index";
 
 const url =
   "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
 
 function App() {
-  const WordPress = useWp(url);
+  const [posts, postsLoading, postsError] = usePosts(url);
+  console.log({ posts, postsLoading, postsError });
 
-  const posts = WordPress.getPosts();
-  const pages = WordPress.getPages();
-  const comments = WordPress.getComments();
+  const [pages, pagesLoading, pagesError] = usePages(url);
+  console.log({ pages, pagesLoading, pagesError });
 
-  console.log({ posts });
-  console.log({ pages });
-  console.log({ comments });
+  const [comments, commentsLoading, commentsError] = useComments(url);
+  console.log({ comments, commentsLoading, commentsError });
 
   return (
     <div className="App">
