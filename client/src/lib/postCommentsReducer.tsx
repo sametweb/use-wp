@@ -12,7 +12,7 @@ interface IComment {
   };
 }
 
-type CommentsActionTypes =
+type PostCommentsActionTypes =
   | "GET_POST_COMMENTS_START"
   | "GET_POST_COMMENTS_SUCCESS"
   | "GET_POST_COMMENTS_ERROR";
@@ -25,7 +25,7 @@ export const DEFAULT_POST_COMMENTS: IData<IComment> = {
 
 export const postCommentsReducer = (
   state: IData<IComment> = DEFAULT_POST_COMMENTS,
-  action: IAction<CommentsActionTypes>
+  action: IAction<PostCommentsActionTypes>
 ): IData<IComment> => {
   switch (action.type) {
     case "GET_POST_COMMENTS_START":

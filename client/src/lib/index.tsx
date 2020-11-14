@@ -7,6 +7,7 @@ import {
   DEFAULT_POST_COMMENTS,
   postCommentsReducer,
 } from "./postCommentsReducer";
+import { DEFAULT_POST_TAGS, postTagsReducer } from "./postTagsReducer";
 
 export function usePosts(url: string) {
   const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
@@ -82,6 +83,26 @@ export const usePostComments = (url: string, post_id: number) => {
       })
       .catch(() => {
         dispatch({ type: "GET_POST_COMMENTS_ERROR" });
+      });
+  }, []);
+
+  return [state.data, state.loading, state.error];
+};
+
+export const usePostTags = (url: string, post_id: number) => {
+  const [state, dispatch] = useReducer(postTagsReducer, DEFAULT_POST_TAGS);
+
+  const fetchPostTags = Axios.get(url + "/tags?post=" + post_id);
+
+  useEffect(() => {
+    dispatch({ type: "GET_POST_TAGS_START" });
+
+    fetchPostTags
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_POST_TAGS_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_POST_TAGS_ERROR" });
       });
   }, []);
 

@@ -1,7 +1,13 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { useComments, usePages, usePosts, usePostComments } from "./lib/index";
+import {
+  useComments,
+  usePages,
+  usePosts,
+  usePostComments,
+  usePostTags,
+} from "./lib/index";
 
 const url =
   "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
@@ -23,6 +29,10 @@ function App() {
   // ] = usePostComments(url, 35);
 
   // console.log({ postComments, postCommentsLoading, postCommentsError });
+
+  // const [postTags, postTagsLoading, postTagsError] = usePostTags(url, 35);
+
+  // console.log({ postTags, postTagsLoading, postTagsError });
 
   return (
     <div className="App">
