@@ -1,6 +1,5 @@
 import Axios, { AxiosResponse } from "axios";
 import { useEffect, useReducer } from "react";
-import actionTypes from "./actionTypes";
 import { DEFAULT_STATE } from "./context";
 import reducer from "./reducer";
 
@@ -49,8 +48,11 @@ export function useWp(url: string) {
     const pagesRequest = Axios.get(url + "/pages");
     const commentsRequest = Axios.get(url + "/comments");
 
-    Axios.all([postsRequest, pagesRequest, commentsRequest])
+    dispatch({
+      type: "GET_ALL_START",
+    });
 
+    Axios.all([postsRequest, pagesRequest, commentsRequest])
       .then((response: AxiosResponse<any>[]) => {
         const [
           { data: allPosts },
@@ -59,13 +61,13 @@ export function useWp(url: string) {
         ] = response;
 
         dispatch({
-          type: actionTypes.GET_ALL_SUCCESS,
+          type: "GET_ALL_SUCCESS",
           payload: { allPosts, allPages, allComments },
         });
       })
       .catch(() => {
         dispatch({
-          type: actionTypes.GET_POSTS_ERROR,
+          type: "GET_ALL_ERROR",
           payload: "Error fetching posts.",
         });
       });
@@ -116,6 +118,9 @@ export function useWp(url: string) {
 
   const getPostComments = (id: number) => {
     const postCommentsURL = url + "/comments?post=" + id;
+    dispatch({
+      type: "GET_POST_COMMENTS_START",
+    });
     Axios.get<AxiosResponse<any>>(postCommentsURL).then(({ data }) => {});
   };
 
