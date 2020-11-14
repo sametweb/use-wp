@@ -1,0 +1,23 @@
+{
+  "name": "use-wp",
+  "version": "0.0.1",
+  "private": false,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "react-html-renderer": "^0.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.56",
+    "react": "^17.0.1",
+    "typescript": "^4.0.5",
+    "eslint": "^7.11.0"
+  }
+}
