@@ -1,8 +1,12 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import Axios, { AxiosResponse } from "axios";
 import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
 import { DEFAULT_PAGES, pagesReducer } from "./pagesReducer";
 import { commentsReducer, DEFAULT_COMMENTS } from "./commentsReducer";
+import {
+  DEFAULT_POST_COMMENTS,
+  postCommentsReducer,
+} from "./postCommentsReducer";
 
 export function usePosts(url: string) {
   const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
@@ -60,3 +64,26 @@ export function useComments(url: string) {
 
   return [state.data, state.loading, state.error];
 }
+
+export const usePostComments = (url: string, post_id: number) => {
+  const [state, dispatch] = useReducer(
+    postCommentsReducer,
+    DEFAULT_POST_COMMENTS
+  );
+
+  const fetchPostComments = Axios.get(url + "/comments?post=" + post_id);
+
+  useEffect(() => {
+    dispatch({ type: "GET_POST_COMMENTS_START" });
+
+    fetchPostComments
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_POST_COMMENTS_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_POST_COMMENTS_ERROR" });
+      });
+  }, []);
+
+  return [state.data, state.loading, state.error];
+};
