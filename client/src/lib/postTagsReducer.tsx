@@ -1,12 +1,4 @@
-import { IAction, IData } from "./types";
-
-interface ITag {
-  id: number;
-  count: number;
-  name: string;
-  slug: string;
-  description: string;
-}
+import { IAction, IData, ITag } from "./types";
 
 type PostTagsActionTypes =
   | "GET_POST_TAGS_START"
