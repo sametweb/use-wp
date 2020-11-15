@@ -49,6 +49,7 @@ export interface IComment {
     date: string;
     date_gmt: string;
     post: number;
+    status: string;
     author_name: string;
     author_ip: string;
     content: { rendered: string };
