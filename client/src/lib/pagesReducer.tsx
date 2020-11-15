@@ -3,13 +3,19 @@ import { IAction, IData } from "./types";
 interface IPage {
   id: number;
   date: string;
+  date_gmt: string;
   modified: string;
   slug: string;
   status: string;
-  type: "page";
   title: { rendered: string };
-  excerpt: { rendered: string };
   content: { rendered: string };
+  excerpt: { rendered: string };
+  categories: Array<number>;
+  author: number;
+  featured_media: number;
+  comment_status: "open" | "closed";
+  tags: Array<number>;
+  menu_order: number;
 }
 
 type PagesActionTypes =

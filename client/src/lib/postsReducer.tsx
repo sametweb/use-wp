@@ -14,7 +14,7 @@ interface IPost {
   author: number;
   featured_media: number;
   comment_status: "open" | "closed";
-  tags: Array<string>;
+  tags: Array<number>;
 }
 
 type PostsActionTypes =
