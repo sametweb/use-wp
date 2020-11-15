@@ -1,12 +1,13 @@
 import { useEffect, useReducer } from "react";
 import Axios, { AxiosResponse } from "axios";
 import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
-import { DEFAULT_PAGES, pagesReducer } from "./pagesReducer";
+import { pagesReducer, DEFAULT_PAGES } from "./pagesReducer";
 import { commentsReducer, DEFAULT_COMMENTS } from "./commentsReducer";
 import {
-  DEFAULT_POST_COMMENTS,
   postCommentsReducer,
+  DEFAULT_POST_COMMENTS,
 } from "./postCommentsReducer";
+
 import { DEFAULT_POST_TAGS, postTagsReducer } from "./postTagsReducer";
 
 export function usePosts(url: string) {

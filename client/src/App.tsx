@@ -13,8 +13,8 @@ const url =
   "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
 
 function App() {
-  // const [posts, postsLoading, postsError] = usePosts(url);
-  // console.log({ posts, postsLoading, postsError });
+  const [posts, postsLoading, postsError] = usePosts(url);
+  console.log({ posts, postsLoading, postsError });
 
   // const [pages, pagesLoading, pagesError] = usePages(url);
   // console.log({ pages, pagesLoading, pagesError });
