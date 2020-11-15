@@ -1,16 +1,21 @@
 import { useEffect, useReducer } from "react";
 import Axios, { AxiosResponse } from "axios";
+import parse from "html-react-parser";
+
 import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
 import { pagesReducer, DEFAULT_PAGES } from "./pagesReducer";
 import { commentsReducer, DEFAULT_COMMENTS } from "./commentsReducer";
-import {
-  postCommentsReducer,
-  DEFAULT_POST_COMMENTS,
-} from "./postCommentsReducer";
+import { postCommentsReducer, DEFAULT_POST_COMMENTS } from "./postCommentsReducer";
+import { categoriesReducer, DEFAULT_CATEGORIES } from "./categoriesReducer";
 
 import { DEFAULT_POST_TAGS, postTagsReducer } from "./postTagsReducer";
+import { IPost } from "./types";
 
-export function usePosts(url: string) {
+function rendered(string: string) {
+  return parse(string);
+}
+
+export function usePosts(url: string): [IPost[], boolean, string] {
   const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
 
   const fetchPosts = Axios.get(url + "/posts");
@@ -19,6 +24,11 @@ export function usePosts(url: string) {
     dispatch({ type: "GET_POSTS_START" });
     fetchPosts
       .then((response: AxiosResponse<any>) => {
+        response.data.forEach((post: IPost) => {
+          post.title.rendered = rendered(post.title.rendered as string);
+          post.content.rendered = rendered(post.content.rendered as string);
+          post.excerpt.rendered = rendered(post.excerpt.rendered as string);
+        });
         dispatch({ type: "GET_POSTS_SUCCESS", payload: response.data });
       })
       .catch(() => {
@@ -68,10 +78,7 @@ export function useComments(url: string) {
 }
 
 export const usePostComments = (url: string, post_id: number) => {
-  const [state, dispatch] = useReducer(
-    postCommentsReducer,
-    DEFAULT_POST_COMMENTS
-  );
+  const [state, dispatch] = useReducer(postCommentsReducer, DEFAULT_POST_COMMENTS);
 
   const fetchPostComments = Axios.get(url + "/comments?post=" + post_id);
 
@@ -109,3 +116,22 @@ export const usePostTags = (url: string, post_id: number) => {
 
   return [state.data, state.loading, state.error];
 };
+
+export function useCategories(url: string) {
+  const [state, dispatch] = useReducer(categoriesReducer, DEFAULT_CATEGORIES);
+
+  const fetchCategories = Axios.get(url + "/categories");
+
+  useEffect(() => {
+    dispatch({ type: "GET_CATEGORIES_START" });
+    fetchCategories
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_CATEGORIES_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_CATEGORIES_ERROR" });
+      });
+  }, []);
+
+  return [state.data, state.loading, state.error];
+}

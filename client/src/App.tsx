@@ -7,14 +7,14 @@ import {
   usePosts,
   usePostComments,
   usePostTags,
+  useCategories,
 } from "./lib/index";
 
-const url =
-  "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
+const url = "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
 
 function App() {
-  // const [posts, postsLoading, postsError] = usePosts(url);
-  // console.log({ posts, postsLoading, postsError });
+  const [posts, postsLoading, postsError] = usePosts(url);
+  console.log({ posts, postsLoading, postsError });
 
   // const [pages, pagesLoading, pagesError] = usePages(url);
   // console.log({ pages, pagesLoading, pagesError });
@@ -31,25 +31,22 @@ function App() {
   // console.log({ postComments, postCommentsLoading, postCommentsError });
 
   // const [postTags, postTagsLoading, postTagsError] = usePostTags(url, 35);
-
   // console.log({ postTags, postTagsLoading, postTagsError });
+
+  // const [categories, categoriesLoading, categoriesError] = useCategories(url);
+  // console.log({ categories, categoriesLoading, categoriesError });
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {posts.map((post) => {
+        return (
+          <React.Fragment key={post.id}>
+            <h1>{post.title.rendered}</h1>
+            <h3>{post.excerpt.rendered}</h3>
+            {post.content.rendered}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }
