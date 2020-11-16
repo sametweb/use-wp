@@ -8,6 +8,7 @@ import {
   usePostComments,
   usePostTags,
   useCategories,
+  useCategoryPosts,
 } from "./lib/index";
 
 const url = "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
@@ -35,6 +36,9 @@ function App() {
 
   // const [categories, categoriesLoading, categoriesError] = useCategories(url);
   // console.log({ categories, categoriesLoading, categoriesError });
+
+  // const [catPosts, catPostsLoading, catPostsError] = useCategoryPosts(url, 1063);
+  // console.log({ catPosts, catPostsLoading, catPostsError });
 
   return (
     <div className="App">

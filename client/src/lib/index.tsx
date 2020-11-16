@@ -1,19 +1,16 @@
 import { useEffect, useReducer } from "react";
 import Axios, { AxiosResponse } from "axios";
-import parse from "html-react-parser";
+import rendered from "./utils/rendered";
+
+import { IPost } from "./types";
 
 import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
 import { pagesReducer, DEFAULT_PAGES } from "./pagesReducer";
 import { commentsReducer, DEFAULT_COMMENTS } from "./commentsReducer";
 import { postCommentsReducer, DEFAULT_POST_COMMENTS } from "./postCommentsReducer";
 import { categoriesReducer, DEFAULT_CATEGORIES } from "./categoriesReducer";
-
 import { DEFAULT_POST_TAGS, postTagsReducer } from "./postTagsReducer";
-import { IPost } from "./types";
-
-function rendered(string: string) {
-  return parse(string);
-}
+import { categoryPostsReducer, DEFAULT_CATEGORY_POSTS } from "./categoryPostsReducer";
 
 export function usePosts(url: string): [IPost[], boolean, string] {
   const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
@@ -130,6 +127,25 @@ export function useCategories(url: string) {
       })
       .catch(() => {
         dispatch({ type: "GET_CATEGORIES_ERROR" });
+      });
+  }, []);
+
+  return [state.data, state.loading, state.error];
+}
+
+export function useCategoryPosts(url: string, cat_id: number) {
+  const [state, dispatch] = useReducer(categoryPostsReducer, DEFAULT_CATEGORY_POSTS);
+
+  const fetchCategoryPosts = Axios.get(url + "/posts?categories=" + cat_id);
+
+  useEffect(() => {
+    dispatch({ type: "GET_CATEGORY_POSTS_START" });
+    fetchCategoryPosts
+      .then((response: AxiosResponse<any>) => {
+        dispatch({ type: "GET_CATEGORY_POSTS_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_CATEGORY_POSTS_ERROR" });
       });
   }, []);
 
