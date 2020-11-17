@@ -1,5 +1,5 @@
 export interface IData<T> {
-    data: Array<T>;
+    data: Array<T> | T;
     loading: boolean;
     error: string;
 }
@@ -75,4 +75,14 @@ export interface ICategory {
     name: string;
     slug: string;
     parent: number;
+}
+
+export interface IMedia {
+    id: number;
+    date: string;
+    date_gmt: string;
+    title: { rendered: string };
+    alt_text: string;
+    url: string;
+
 }

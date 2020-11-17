@@ -9,9 +9,10 @@ import {
   usePostTags,
   useCategories,
   useCategoryPosts,
+  usePostMedia,
 } from "./lib/index";
 
-const url = "https://public-api.wordpress.com/wp/v2/sites/sametmutevelli.wordpress.com";
+const url = "https://samet.web.tr";
 
 function App() {
   const [posts, postsLoading, postsError] = usePosts(url);
@@ -39,6 +40,9 @@ function App() {
 
   // const [catPosts, catPostsLoading, catPostsError] = useCategoryPosts(url, 1063);
   // console.log({ catPosts, catPostsLoading, catPostsError });
+
+  const [postMedia, postMediaLoading, postMediaError] = usePostMedia(url, 5);
+  console.log({ postMedia, postMediaLoading, postMediaError });
 
   return (
     <div className="App">

@@ -9,13 +9,15 @@ import { pagesReducer, DEFAULT_PAGES } from "./pagesReducer";
 import { commentsReducer, DEFAULT_COMMENTS } from "./commentsReducer";
 import { postCommentsReducer, DEFAULT_POST_COMMENTS } from "./postCommentsReducer";
 import { categoriesReducer, DEFAULT_CATEGORIES } from "./categoriesReducer";
-import { DEFAULT_POST_TAGS, postTagsReducer } from "./postTagsReducer";
+import { postTagsReducer, DEFAULT_POST_TAGS } from "./postTagsReducer";
 import { categoryPostsReducer, DEFAULT_CATEGORY_POSTS } from "./categoryPostsReducer";
+import { postMediaReducer, DEFAULT_POST_MEDIA } from "./postMediaReducer";
 
 export function usePosts(url: string): [IPost[], boolean, string] {
   const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
+  const apiUrl = url + "/wp-json/wp/v2";
 
-  const fetchPosts = Axios.get(url + "/posts");
+  const fetchPosts = Axios.get(apiUrl + "/posts");
 
   useEffect(() => {
     dispatch({ type: "GET_POSTS_START" });
@@ -33,7 +35,7 @@ export function usePosts(url: string): [IPost[], boolean, string] {
       });
   }, []);
 
-  return [state.data, state.loading, state.error];
+  return [state.data as IPost[], state.loading, state.error];
 }
 
 export function usePages(url: string) {
@@ -88,6 +90,28 @@ export const usePostComments = (url: string, post_id: number) => {
       })
       .catch(() => {
         dispatch({ type: "GET_POST_COMMENTS_ERROR" });
+      });
+  }, []);
+
+  return [state.data, state.loading, state.error];
+};
+
+export const usePostMedia = (url: string, media_id: number) => {
+  const [state, dispatch] = useReducer(postMediaReducer, DEFAULT_POST_MEDIA);
+  const apiUrl = url + "/wp-json/wp/v2";
+  const fetchPostMedia = Axios.get(apiUrl + "/media/" + media_id);
+
+  useEffect(() => {
+    dispatch({ type: "GET_POST_MEDIA_START" });
+
+    fetchPostMedia
+      .then((response: AxiosResponse<any>) => {
+        response.data.url = url + "/wp-content/uploads/" + response.data.media_details.file;
+
+        dispatch({ type: "GET_POST_MEDIA_SUCCESS", payload: response.data });
+      })
+      .catch(() => {
+        dispatch({ type: "GET_POST_MEDIA_ERROR" });
       });
   }, []);
 
