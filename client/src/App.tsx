@@ -52,9 +52,9 @@ function App() {
       {posts.map((post) => {
         return (
           <React.Fragment key={post.id}>
-            <h1>{post.title.rendered}</h1>
-            <h3>{post.excerpt.rendered}</h3>
-            {post.content.rendered}
+            <h1>{post.postTitle}</h1>
+            {post.excerptJSX}
+            {post.contentJSX}
           </React.Fragment>
         );
       })}

@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import Axios, { AxiosResponse } from "axios";
 import rendered from "./utils/rendered";
 
-import { IPost } from "./types";
+import { ICategory, IComment, IMedia, IPage, IPost, ITag } from "./types";
 
 import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
 import { pagesReducer, DEFAULT_PAGES } from "./pagesReducer";
@@ -26,9 +26,9 @@ function useWp(url: string) {
       fetchPosts
         .then((response: AxiosResponse<any>) => {
           response.data.forEach((post: IPost) => {
-            post.title.rendered = rendered(post.title.rendered as string);
-            post.content.rendered = rendered(post.content.rendered as string);
-            post.excerpt.rendered = rendered(post.excerpt.rendered as string);
+            post.postTitle = post.title.rendered;
+            post.contentJSX = rendered(post.content.rendered as string);
+            post.excerptJSX = rendered(post.excerpt.rendered as string);
           });
           dispatch({ type: "GET_POSTS_SUCCESS", payload: response.data });
         })
@@ -40,7 +40,7 @@ function useWp(url: string) {
     return [state.data as IPost[], state.loading, state.error];
   }
 
-  function usePages() {
+  function usePages(): [IPage[], boolean, string] {
     const [state, dispatch] = useReducer(pagesReducer, DEFAULT_PAGES);
 
     useEffect(() => {
@@ -55,10 +55,10 @@ function useWp(url: string) {
         });
     }, []);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as IPage[], state.loading, state.error];
   }
 
-  function useComments() {
+  function useComments(): [IComment[], boolean, string] {
     const [state, dispatch] = useReducer(commentsReducer, DEFAULT_COMMENTS);
 
     useEffect(() => {
@@ -73,10 +73,10 @@ function useWp(url: string) {
         });
     }, []);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as IComment[], state.loading, state.error];
   }
 
-  const usePostComments = (post_id: number) => {
+  const usePostComments = (post_id: number): [IComment[], boolean, string] => {
     const [state, dispatch] = useReducer(postCommentsReducer, DEFAULT_POST_COMMENTS);
 
     useEffect(() => {
@@ -92,10 +92,10 @@ function useWp(url: string) {
         });
     }, [post_id]);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as IComment[], state.loading, state.error];
   };
 
-  const usePostMedia = (media_id: number) => {
+  const usePostMedia = (media_id: number): [IMedia, boolean, string] => {
     const [state, dispatch] = useReducer(postMediaReducer, DEFAULT_POST_MEDIA);
 
     useEffect(() => {
@@ -113,10 +113,10 @@ function useWp(url: string) {
         });
     }, [media_id]);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as IMedia, state.loading, state.error];
   };
 
-  const usePostTags = (post_id: number) => {
+  const usePostTags = (post_id: number): [ITag[], boolean, string] => {
     const [state, dispatch] = useReducer(postTagsReducer, DEFAULT_POST_TAGS);
 
     useEffect(() => {
@@ -132,10 +132,10 @@ function useWp(url: string) {
         });
     }, [post_id]);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as ITag[], state.loading, state.error];
   };
 
-  function useCategories() {
+  function useCategories(): [ICategory[], boolean, string] {
     const [state, dispatch] = useReducer(categoriesReducer, DEFAULT_CATEGORIES);
 
     useEffect(() => {
@@ -150,10 +150,10 @@ function useWp(url: string) {
         });
     }, []);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as ICategory[], state.loading, state.error];
   }
 
-  function useCategoryPosts(cat_id: number) {
+  function useCategoryPosts(cat_id: number): [IPost[], boolean, string] {
     const [state, dispatch] = useReducer(categoryPostsReducer, DEFAULT_CATEGORY_POSTS);
 
     useEffect(() => {
@@ -168,7 +168,7 @@ function useWp(url: string) {
         });
     }, [cat_id]);
 
-    return [state.data, state.loading, state.error];
+    return [state.data as IPost[], state.loading, state.error];
   }
 
   return {
