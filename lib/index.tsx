@@ -26,9 +26,9 @@ function useWp(url: string) {
       fetchPosts
         .then((response: AxiosResponse<any>) => {
           response.data.forEach((post: IPost) => {
-            post.postTitle = post.title.rendered;
-            post.contentJSX = rendered(post.content.rendered as string);
-            post.excerptJSX = rendered(post.excerpt.rendered as string);
+            post.title.rendered = rendered(post.title.rendered as string);
+            post.content.rendered = rendered(post.content.rendered as string);
+            post.excerpt.rendered = rendered(post.excerpt.rendered as string);
           });
           dispatch({ type: "GET_POSTS_SUCCESS", payload: response.data });
         })

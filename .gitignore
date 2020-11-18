@@ -1,2 +1,4 @@
 node_modules/
 notes.md
+client/src/lib
+client/src/dist

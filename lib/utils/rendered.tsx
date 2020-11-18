@@ -1,5 +1,7 @@
 import parse from "html-react-parser";
 
-export default (string: string) => {
+const rendered = (string: string) => {
   return parse(string);
 };
+
+export default rendered;
