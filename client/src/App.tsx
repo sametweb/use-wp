@@ -1,21 +1,24 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import {
-  useComments,
-  usePages,
-  usePosts,
-  usePostComments,
-  usePostTags,
-  useCategories,
-  useCategoryPosts,
-  usePostMedia,
-} from "./lib/index";
+import useWp from "./lib/index";
 
 const url = "https://samet.web.tr";
 
 function App() {
-  const [posts, postsLoading, postsError] = usePosts(url);
+  const WordPress = useWp(url);
+
+  const {
+    usePosts,
+    // usePages,
+    // useComments,
+    // usePostComments,
+    // usePostTags,
+    // useCategories,
+    // useCategoryPosts,
+    usePostMedia,
+  } = WordPress;
+
+  const [posts, postsLoading, postsError] = usePosts();
   console.log({ posts, postsLoading, postsError });
 
   // const [pages, pagesLoading, pagesError] = usePages(url);
@@ -41,7 +44,7 @@ function App() {
   // const [catPosts, catPostsLoading, catPostsError] = useCategoryPosts(url, 1063);
   // console.log({ catPosts, catPostsLoading, catPostsError });
 
-  const [postMedia, postMediaLoading, postMediaError] = usePostMedia(url, 5);
+  const [postMedia, postMediaLoading, postMediaError] = usePostMedia(5);
   console.log({ postMedia, postMediaLoading, postMediaError });
 
   return (
