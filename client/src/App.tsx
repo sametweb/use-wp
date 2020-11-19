@@ -9,7 +9,7 @@ function App() {
 
   const {
     usePosts,
-    // usePages,
+    usePages,
     // useComments,
     // usePostComments,
     // usePostTags,
@@ -18,7 +18,7 @@ function App() {
     usePostMedia,
   } = WordPress;
 
-  const [posts, postsLoading, postsError] = usePosts();
+  const [posts, postsLoading, postsError] = usePages();
   console.log({ posts, postsLoading, postsError });
 
   // const [pages, pagesLoading, pagesError] = usePages(url);

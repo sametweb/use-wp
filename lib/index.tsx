@@ -48,6 +48,11 @@ function useWp(url: string) {
       dispatch({ type: "GET_PAGES_START" });
       fetchPages
         .then((response: AxiosResponse<any>) => {
+          response.data.forEach((post: IPage) => {
+            post.title.rendered = rendered(post.title.rendered as string);
+            post.content.rendered = rendered(post.content.rendered as string);
+            post.excerpt.rendered = rendered(post.excerpt.rendered as string);
+          });
           dispatch({ type: "GET_PAGES_SUCCESS", payload: response.data });
         })
         .catch(() => {

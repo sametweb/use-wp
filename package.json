@@ -16,6 +16,7 @@
   },
   "private": false,
   "scripts": {
+    "start": "cd client && npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "SET NODE_ENV=production&tsc&babel client/src/lib --out-dir client/src/dist --copy-files --ignore __tests__,spec.js,test.js,__snapshots__"
   },

@@ -26,21 +26,7 @@ export interface IPost {
     tags: Array<number>;
 }
 
-export interface IPage {
-    id: number;
-    date: string;
-    date_gmt: string;
-    modified: string;
-    slug: string;
-    status: string;
-    title: { rendered: string };
-    content: { rendered: string };
-    excerpt: { rendered: string };
-    categories: Array<number>;
-    author: number;
-    featured_media: number;
-    comment_status: "open" | "closed";
-    tags: Array<number>;
+export interface IPage extends IPost {
     menu_order: number;
 }
 
