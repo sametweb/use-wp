@@ -13,7 +13,18 @@ import { postTagsReducer, DEFAULT_POST_TAGS } from "./postTagsReducer";
 import { categoryPostsReducer, DEFAULT_CATEGORY_POSTS } from "./categoryPostsReducer";
 import { postMediaReducer, DEFAULT_POST_MEDIA } from "./postMediaReducer";
 
-function useWp(url: string) {
+interface IUseWp {
+  usePosts: () => [IPost[], boolean, string];
+  usePages: () => [IPage[], boolean, string];
+  useComments: () => [IComment[], boolean, string];
+  usePostComments: (post_id: number) => [IComment[], boolean, string];
+  usePostTags: (post_id: number) => [ITag[], boolean, string];
+  useCategories: () => [ICategory[], boolean, string];
+  useCategoryPosts: (cat_id: number) => [IPost[], boolean, string];
+  usePostMedia: (media_id: number) => [IMedia, boolean, string];
+}
+
+function useWp(url: string): IUseWp {
   const apiUrl = url + "/wp-json/wp/v2";
 
   function usePosts(): [IPost[], boolean, string] {
