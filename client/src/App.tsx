@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import "./App.css";
 import useWp from "./lib/index";
 import { Layout } from "antd";
