@@ -15,18 +15,20 @@ import { postMediaReducer, DEFAULT_POST_MEDIA } from "./postMediaReducer";
 
 type DataReturnType<T> = [T, boolean, string];
 
-interface IUseWpReturnType {
-  usePosts: () => DataReturnType<IPost[]>;
-  usePages: () => DataReturnType<IPage[]>;
-  useComments: () => DataReturnType<IComment[]>;
-  usePostComments: (post_id: number) => DataReturnType<IComment[]>;
-  usePostTags: (post_id: number) => DataReturnType<ITag[]>;
-  useCategories: () => DataReturnType<ICategory[]>;
-  useCategoryPosts: (cat_id: number) => DataReturnType<IPost[]>;
-  usePostMedia: (media_id: number) => DataReturnType<IMedia>;
+interface IUseWp {
+  (url: string): {
+    usePosts: () => DataReturnType<IPost[]>;
+    usePages: () => DataReturnType<IPage[]>;
+    useComments: () => DataReturnType<IComment[]>;
+    usePostComments: (post_id: number) => DataReturnType<IComment[]>;
+    usePostTags: (post_id: number) => DataReturnType<ITag[]>;
+    useCategories: () => DataReturnType<ICategory[]>;
+    useCategoryPosts: (cat_id: number) => DataReturnType<IPost[]>;
+    usePostMedia: (media_id: number) => DataReturnType<IMedia>;
+  };
 }
 
-const useWp = (url: string): IUseWpReturnType => {
+const useWp: IUseWp = (url: string) => {
   const apiUrl = url + "/wp-json/wp/v2";
 
   function usePosts(): [IPost[], boolean, string] {
