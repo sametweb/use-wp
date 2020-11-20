@@ -54,3 +54,15 @@
     }
   }
 }
+
+.blog {
+  .block {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px;
+  }
+
+  .blog-post-title {
+    font-size: 1.6rem;
+  }
+}
