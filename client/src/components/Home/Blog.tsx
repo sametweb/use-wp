@@ -24,7 +24,7 @@ function Blog() {
           <List.Item>
             <List.Item.Meta
               title={
-                <Link className="blog-post-title" to={post.slug}>
+                <Link className="blog-post-title" to={"/blog/" + post.slug}>
                   {post.title.rendered}
                 </Link>
               }
