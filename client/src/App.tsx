@@ -16,7 +16,7 @@ function App() {
         <Layout>
           <Content>
             <Route path="/" exact component={Home} />
-            <Route path="/blog" exact component={Blog} />
+            <Route path={["/blog", "/blog/page/:page_number"]} exact component={Blog} />
           </Content>
         </Layout>
         <Footer>life is short, birds are flying</Footer>

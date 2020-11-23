@@ -1,15 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { List, Space } from "antd";
 import useWp from "../lib";
 import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
+import { IPostQueryParams } from "../lib/types";
 
 const url = "https://samet.web.tr";
 
 function Blog() {
-  const { usePosts } = useWp(url);
-  const [posts, postsLoading, postsError] = usePosts();
+  const { page_number } = useParams<{ page_number: string }>();
+  const history = useHistory();
 
+  const { usePosts } = useWp(url);
+  const [params, setParams] = useState<IPostQueryParams>({ page: page_number, per_page: 2 });
+  const [posts, postsLoading, postsError] = usePosts(params);
+
+  console.log({ posts, params, postsError });
   const IconText = ({ icon, text }: { icon: any; text: string }) => (
     <Space>
       {React.createElement(icon)}
@@ -24,10 +30,12 @@ function Blog() {
           itemLayout="vertical"
           size="large"
           pagination={{
+            total: 4, // this should come from the result of usePosts() hook.
             onChange: (page) => {
-              console.log(page);
+              history.push("/blog/page/" + page);
+              setParams({ ...params, page });
             },
-            pageSize: 1,
+            pageSize: 2,
           }}
           dataSource={posts}
           footer={

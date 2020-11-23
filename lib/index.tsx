@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import Axios, { AxiosResponse } from "axios";
 import rendered from "./utils/rendered";
 
-import { ICategory, IComment, IMedia, IPage, IPost, ITag } from "./types";
+import { ICategory, IComment, IMedia, IPage, IPost, IPostQueryParams, ITag } from "./types";
 
 import { postsReducer, DEFAULT_POSTS } from "./postsReducer";
 import { pagesReducer, DEFAULT_PAGES } from "./pagesReducer";
@@ -17,7 +17,7 @@ type DataReturnType<T> = [T, boolean, string];
 
 interface IUseWp {
   (url: string): {
-    usePosts: () => DataReturnType<IPost[]>;
+    usePosts: (params?: IPostQueryParams) => DataReturnType<IPost[]>;
     usePages: () => DataReturnType<IPage[]>;
     useComments: () => DataReturnType<IComment[]>;
     usePostComments: (post_id: number) => DataReturnType<IComment[]>;
@@ -31,11 +31,11 @@ interface IUseWp {
 const useWp: IUseWp = (url: string) => {
   const apiUrl = url + "/wp-json/wp/v2";
 
-  function usePosts(): [IPost[], boolean, string] {
+  function usePosts(params: IPostQueryParams = {}): [IPost[], boolean, string] {
     const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
 
     useEffect(() => {
-      const fetchPosts = Axios.get(apiUrl + "/posts");
+      const fetchPosts = Axios.get(apiUrl + "/posts", { params });
       dispatch({ type: "GET_POSTS_START" });
 
       fetchPosts
@@ -50,7 +50,7 @@ const useWp: IUseWp = (url: string) => {
         .catch(() => {
           dispatch({ type: "GET_POSTS_ERROR" });
         });
-    }, []);
+    }, [params]);
 
     return [state.data as IPost[], state.loading, state.error];
   }

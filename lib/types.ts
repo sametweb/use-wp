@@ -26,6 +26,19 @@ export interface IPost {
     tags: Array<number>;
 }
 
+export interface IPostQueryParams {
+    page?: number | string; // default 1
+    per_page?: number | string; // default 10
+    search?: string;
+    author?: number | string; // single author id or comma separated author ids
+    offset?: number | string;
+    order?: "desc" | "asc";
+    orderby?: "author" | "date" | "id" | "include" | "modified" | "parent" | "relevance" | "slug" | "include_slugs" | "title";
+    slug?: string;
+    categories?: number | string; // single category id or comma separated category ids
+    tags?: number | string; // single tag id or comma separated tag ids
+}
+
 export interface IPage extends IPost {
     menu_order: number;
 }
