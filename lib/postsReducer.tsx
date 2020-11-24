@@ -1,9 +1,6 @@
 import { IAction, IData, IPost } from "./types";
 
-type PostsActionTypes =
-  | "GET_POSTS_START"
-  | "GET_POSTS_SUCCESS"
-  | "GET_POSTS_ERROR";
+type PostsActionTypes = "GET_POSTS_START" | "GET_POSTS_SUCCESS" | "GET_POSTS_ERROR";
 
 export const DEFAULT_POSTS: IData<IPost> = {
   data: [],

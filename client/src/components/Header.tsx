@@ -1,18 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
 const { Header: MyHeader } = Layout;
 
 function Header() {
   const history = useHistory();
+  const location = useLocation();
+  console.log(location);
+  const [activeKey, setActiveKey] = useState<string>("1");
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setActiveKey("1");
+    } else if (location.pathname.startsWith("/blog")) {
+      setActiveKey("2");
+    } else if (location.pathname.startsWith("/portfolio")) {
+      setActiveKey("3");
+    }
+  }, [location.pathname]);
 
   return (
     <MyHeader style={{ display: "flex", justifyContent: "space-between" }}>
       <div className="logo">
         <h1>SM</h1>
       </div>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
+      <Menu theme="dark" mode="horizontal" selectedKeys={[activeKey]}>
         <Menu.Item key="1" onClick={() => history.push("/")}>
           Home
         </Menu.Item>

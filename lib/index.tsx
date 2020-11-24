@@ -1,6 +1,5 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import Axios, { AxiosResponse } from "axios";
-import rendered from "./utils/rendered";
 
 import { ICategory, IComment, IMedia, IPage, IPost, IPostQueryParams, ITag } from "./types";
 
@@ -13,7 +12,7 @@ import { postTagsReducer, DEFAULT_POST_TAGS } from "./postTagsReducer";
 import { categoryPostsReducer, DEFAULT_CATEGORY_POSTS } from "./categoryPostsReducer";
 import { postMediaReducer, DEFAULT_POST_MEDIA } from "./postMediaReducer";
 
-type DataReturnType<T> = [T, boolean, string];
+type DataReturnType<T> = [{ data: T; total: number }, boolean, string];
 
 interface IUseWp {
   (url: string): {
@@ -31,28 +30,31 @@ interface IUseWp {
 const useWp: IUseWp = (url: string) => {
   const apiUrl = url + "/wp-json/wp/v2";
 
-  function usePosts(params: IPostQueryParams = {}): [IPost[], boolean, string] {
+  function usePosts(params: IPostQueryParams = {}): DataReturnType<IPost[]> {
     const [state, dispatch] = useReducer(postsReducer, DEFAULT_POSTS);
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
-      const fetchPosts = Axios.get(apiUrl + "/posts", { params });
+      const source = Axios.CancelToken.source();
+
+      const fetchPosts = Axios.get(apiUrl + "/posts", { params, cancelToken: source.token });
       dispatch({ type: "GET_POSTS_START" });
 
       fetchPosts
         .then((response: AxiosResponse<any>) => {
-          response.data.forEach((post: IPost) => {
-            post.title.rendered = rendered(post.title.rendered as string);
-            post.content.rendered = rendered(post.content.rendered as string);
-            post.excerpt.rendered = rendered(post.excerpt.rendered as string);
-          });
+          setTotal(Number(response.headers["x-wp-total"]));
           dispatch({ type: "GET_POSTS_SUCCESS", payload: response.data });
         })
         .catch(() => {
           dispatch({ type: "GET_POSTS_ERROR" });
         });
+
+      return () => {
+        source.cancel();
+      };
     }, [params]);
 
-    return [state.data as IPost[], state.loading, state.error];
+    return [{ data: state.data as IPost[], total }, state.loading, state.error];
   }
 
   function usePages(): [IPage[], boolean, string] {
@@ -63,11 +65,6 @@ const useWp: IUseWp = (url: string) => {
       dispatch({ type: "GET_PAGES_START" });
       fetchPages
         .then((response: AxiosResponse<any>) => {
-          response.data.forEach((post: IPage) => {
-            post.title.rendered = rendered(post.title.rendered as string);
-            post.content.rendered = rendered(post.content.rendered as string);
-            post.excerpt.rendered = rendered(post.excerpt.rendered as string);
-          });
           dispatch({ type: "GET_PAGES_SUCCESS", payload: response.data });
         })
         .catch(() => {

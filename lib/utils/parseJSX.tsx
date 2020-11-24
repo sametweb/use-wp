@@ -1,7 +1,7 @@
 import parse from "html-react-parser";
 
-const rendered = (string: string) => {
+const parseJSX = (string: string) => {
   return parse(string);
 };
 
-export default rendered;
+export default parseJSX;

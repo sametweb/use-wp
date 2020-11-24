@@ -16,9 +16,9 @@ export interface IPost {
     modified: string;
     slug: string;
     status: string;
-    title: { rendered: string | JSX.Element | JSX.Element[] };
-    content: { rendered: string | JSX.Element | JSX.Element[]; };
-    excerpt: { rendered: string | JSX.Element | JSX.Element[]; };
+    title: { rendered: string };
+    content: { rendered: string };
+    excerpt: { rendered: string };
     categories: Array<number>;
     author: number;
     featured_media: number;

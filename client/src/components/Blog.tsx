@@ -4,6 +4,7 @@ import { List, Space } from "antd";
 import useWp from "../lib";
 import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
 import { IPostQueryParams } from "../lib/types";
+import parseJSX from "../dist/utils/parseJSX";
 
 const url = "https://samet.web.tr";
 
@@ -12,10 +13,10 @@ function Blog() {
   const history = useHistory();
 
   const { usePosts } = useWp(url);
-  const [params, setParams] = useState<IPostQueryParams>({ page: page_number, per_page: 2 });
+
+  const [params, setParams] = useState<IPostQueryParams>({ page: page_number, per_page: 3 });
   const [posts, postsLoading, postsError] = usePosts(params);
 
-  console.log({ posts, params, postsError });
   const IconText = ({ icon, text }: { icon: any; text: string }) => (
     <Space>
       {React.createElement(icon)}
@@ -28,16 +29,18 @@ function Blog() {
       <div className="block">
         <List
           itemLayout="vertical"
+          loading={postsLoading}
           size="large"
           pagination={{
-            total: 4, // this should come from the result of usePosts() hook.
+            total: posts.total,
             onChange: (page) => {
               history.push("/blog/page/" + page);
               setParams({ ...params, page });
             },
-            pageSize: 2,
+            pageSize: 3,
+            defaultCurrent: Number(page_number),
           }}
-          dataSource={posts}
+          dataSource={posts.data}
           footer={
             <div>
               <b>ant design</b> footer part
@@ -60,31 +63,17 @@ function Blog() {
               }
             >
               <List.Item.Meta
-                title={<Link to={`/blog/${post.slug}`}>{post.title.rendered}</Link>}
+                title={
+                  <Link to={{ pathname: `/blog/${post.slug}`, state: post }}>
+                    {parseJSX(post.title.rendered)}
+                  </Link>
+                }
                 description={post.date}
               />
-              {post.excerpt.rendered}
+              {parseJSX(post.excerpt.rendered)}
             </List.Item>
           )}
         />
-        {/* <List
-          size="large"
-          itemLayout="horizontal"
-          dataSource={posts.filter((_, i) => i < 3)}
-          loading={postsLoading}
-          renderItem={(post) => (
-            <List.Item>
-              <List.Item.Meta
-                title={
-                  <Link className="blog-post-title" to={post.slug}>
-                    {post.title.rendered}
-                  </Link>
-                }
-                description={post.excerpt.rendered}
-              />
-            </List.Item>
-          )}
-        /> */}
       </div>
     </div>
   );
