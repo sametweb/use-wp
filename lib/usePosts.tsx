@@ -1,8 +1,8 @@
-import { useContext, useReducer } from "react";
-import Axios from "axios";
+import { useContext, useEffect, useReducer, useRef } from "react";
+import Axios, { CancelTokenSource } from "axios";
 
-import { Fetch, Post, PostRequestParams, Reducer, Hook } from "./dataTypes";
-import { WPContext } from "./useWp";
+import { Post, PostRequestParams, Reducer, Hook, FetchItems, State } from "./types";
+import { WPContext } from ".";
 
 type ActionType = "GET_POSTS_START" | "GET_POSTS_SUCCESS" | "GET_POSTS_ERROR";
 
@@ -27,26 +27,35 @@ const reducer: Reducer<Post[], ActionType> = (state = __initialState, action) =>
   }
 };
 
-const usePosts: Hook<Post[], PostRequestParams> = () => {
+const usePosts: Hook<State<Post[]>, FetchItems<PostRequestParams>> = () => {
   const wp = useContext(WPContext);
-  console.log("usePosts", wp);
 
   const [posts, dispatch] = useReducer(reducer, __initialState);
 
-  const fetchPosts: Fetch<PostRequestParams> = (params) => {
+  const source = Axios.CancelToken.source();
+
+  const fetchPosts: FetchItems<PostRequestParams> = (params?: PostRequestParams) => {
     dispatch({ type: "GET_POSTS_START" });
 
-    Axios.get<Post[]>(wp.urlWithPath + "/posts", { params })
+    Axios.get<Post[]>(wp.urlWithPath + "/posts", { cancelToken: source.token, params })
       .then((posts) => {
-        dispatch({
-          type: "GET_POSTS_SUCCESS",
-          payload: { data: posts.data, count: Number(posts.headers["x-wp-total"]) },
-        });
+        const payload = { data: posts.data, count: Number(posts.headers["x-wp-total"]) };
+        dispatch({ type: "GET_POSTS_SUCCESS", payload });
       })
-      .catch(() => {
-        dispatch({ type: "GET_POSTS_ERROR" });
+      .catch((error) => {
+        if (Axios.isCancel(error)) {
+          console.log({ error });
+        } else {
+          dispatch({ type: "GET_POSTS_ERROR" });
+        }
       });
   };
+
+  useEffect(() => {
+    return () => {
+      source.cancel();
+    };
+  }, []);
 
   return [posts, fetchPosts];
 };

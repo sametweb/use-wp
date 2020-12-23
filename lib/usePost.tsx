@@ -1,8 +1,8 @@
-import { useContext, useReducer } from "react";
+import { useCallback, useContext, useReducer } from "react";
 import Axios from "axios";
 
-import { Fetch, Post, Reducer, Hook, State } from "./dataTypes";
-import { WPContext } from "./useWp";
+import { FetchItem, Post, Reducer, Hook, State } from "./types";
+import { WPContext } from ".";
 
 type ActionType = "GET_POST_START" | "GET_POST_SUCCESS" | "GET_POST_ERROR";
 
@@ -26,25 +26,24 @@ const reducer: Reducer<Post, ActionType> = (state = __initialState as State<Post
   }
 };
 
-const usePost: Hook<Post, string> = () => {
+const usePost: Hook<State<Post>, FetchItem> = () => {
   const wp = useContext(WPContext);
   const [post, dispatch] = useReducer(reducer, __initialState as State<Post>);
-  console.log("usePost", wp);
 
-  const fetchPost: Fetch<string> = (slug) => {
-    dispatch({ type: "GET_POST_START" });
+  const fetchPost: FetchItem = useCallback(
+    (slug) => {
+      dispatch({ type: "GET_POST_START" });
 
-    Axios.get<Post[]>(wp.urlWithPath + "/posts?slug=" + slug)
-      .then((post) => {
-        dispatch({
-          type: "GET_POST_SUCCESS",
-          payload: post.data[0],
+      Axios.get<Post[]>(wp.urlWithPath + "/posts?slug=" + slug)
+        .then((post) => {
+          dispatch({ type: "GET_POST_SUCCESS", payload: post.data[0] });
+        })
+        .catch(() => {
+          dispatch({ type: "GET_POST_ERROR" });
         });
-      })
-      .catch(() => {
-        dispatch({ type: "GET_POST_ERROR" });
-      });
-  };
+    },
+    [wp.urlWithPath]
+  );
 
   return [post, fetchPost];
 };

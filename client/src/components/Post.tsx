@@ -1,22 +1,18 @@
 import React, { useEffect } from "react";
-import { useLocation, useParams, useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import parseJSX from "../dist/utils/parseJSX";
-import { IPost } from "../lib/types";
-import usePost from "../lib/usePost";
+import usePost from "../dist/usePost";
 
 function Post() {
-  const { state } = useLocation<IPost>();
   const params = useParams<{ slug: string }>();
 
   const [post, fetchPost] = usePost();
 
-  console.log({ post });
-
   useEffect(() => {
     fetchPost(params.slug);
-  }, []);
+  }, [params.slug]);
 
-  if (post.loading) {
+  if (!post.data.date || post.loading) {
     return <div>Loading</div>;
   }
 

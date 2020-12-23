@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { List } from "antd";
-import useWp from "../../lib";
-import { IPostQueryParams } from "../../lib/types";
 import parseJSX from "../../dist/utils/parseJSX";
-
-const url = "https://samet.web.tr";
+import usePosts from "../../dist/usePosts";
+import { PostRequestParams } from "../../dist/types";
 
 function Blog() {
-  const { usePosts } = useWp(url);
-  const [params] = useState<IPostQueryParams>({ per_page: 3 });
-  const [posts, postsLoading, postsError] = usePosts(params);
+  const [params] = useState<PostRequestParams>({ per_page: 3 });
+  const [posts, fetchPosts] = usePosts();
+
+  useEffect(() => {
+    fetchPosts(params);
+  }, []);
 
   return (
     <div className="block">
@@ -18,12 +19,12 @@ function Blog() {
       <p className="welcome-text">
         I write blog posts about things I find exciting. Here are recent my posts.
       </p>
-      {postsError && <p>{postsError}</p>}
+      {posts.error && <p>{posts.error}</p>}
       <List
         size="large"
         itemLayout="horizontal"
         dataSource={posts.data}
-        loading={postsLoading}
+        loading={posts.loading}
         renderItem={(post) => (
           <List.Item>
             <List.Item.Meta
