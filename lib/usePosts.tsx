@@ -32,19 +32,26 @@ const usePosts: Hook<State<Post[]>, FetchItems<PostRequestParams>> = () => {
 
   const [posts, dispatch] = useReducer(reducer, __initialState);
 
-  const source = Axios.CancelToken.source();
+  const source = useRef<CancelTokenSource | null>(null);
+
+  function getSource() {
+    if (source.current === null) {
+      source.current = Axios.CancelToken.source();
+    }
+    return source.current;
+  }
 
   const fetchPosts: FetchItems<PostRequestParams> = (params?: PostRequestParams) => {
     dispatch({ type: "GET_POSTS_START" });
 
-    Axios.get<Post[]>(wp.urlWithPath + "/posts", { cancelToken: source.token, params })
+    Axios.get<Post[]>(wp.urlWithPath + "/posts", { cancelToken: getSource().token, params })
       .then((posts) => {
         const payload = { data: posts.data, count: Number(posts.headers["x-wp-total"]) };
         dispatch({ type: "GET_POSTS_SUCCESS", payload });
       })
       .catch((error) => {
         if (Axios.isCancel(error)) {
-          console.log({ error });
+          console.log(error);
         } else {
           dispatch({ type: "GET_POSTS_ERROR" });
         }
@@ -53,7 +60,7 @@ const usePosts: Hook<State<Post[]>, FetchItems<PostRequestParams>> = () => {
 
   useEffect(() => {
     return () => {
-      source.cancel();
+      source.current?.cancel("Network request cancelled.");
     };
   }, []);
 
