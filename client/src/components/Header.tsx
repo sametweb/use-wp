@@ -1,41 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const { Header: MyHeader } = Layout;
 
 function Header() {
-  const history = useHistory();
   const location = useLocation();
-  console.log(location);
-  const [activeKey, setActiveKey] = useState<string>("1");
 
   useEffect(() => {
-    if (location.pathname === "/") {
-      setActiveKey("1");
-    } else if (location.pathname.startsWith("/blog")) {
-      setActiveKey("2");
-    } else if (location.pathname.startsWith("/portfolio")) {
-      setActiveKey("3");
+    function offset(el: any) {
+      var rect = el.getBoundingClientRect(),
+        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
     }
-  }, [location.pathname]);
+
+    // example use
+    if (location.hash) {
+      var div = document.querySelector(location.hash);
+      var element = offset(div);
+      window.scrollTo(element.left, element.top);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.hash]);
 
   return (
-    <MyHeader style={{ display: "flex", justifyContent: "space-between" }}>
+    <MyHeader
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+      }}
+    >
       <div className="logo">
         <Link to="/">
           <h1>SM</h1>
         </Link>
       </div>
-      <Menu theme="dark" mode="horizontal" selectedKeys={[activeKey]}>
-        <Menu.Item key="1" onClick={() => history.push("/")}>
-          Home
+      <Menu theme="dark" mode="horizontal" selectedKeys={[]}>
+        <Menu.Item>
+          <Link to="/">Home</Link>
         </Menu.Item>
-        <Menu.Item key="3" onClick={() => history.push("/portfolio")}>
-          Portfolio
+        <Menu.Item>
+          <Link to={{ pathname: "/", hash: "#portfolio" }}>Portfolio</Link>
         </Menu.Item>
-        <Menu.Item key="2" onClick={() => history.push("/blog")}>
-          Blog
+        <Menu.Item>
+          <Link to={{ pathname: "/", hash: "#blog" }}>Blog</Link>
         </Menu.Item>
       </Menu>
     </MyHeader>

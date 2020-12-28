@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 code:not(.language-javascript) {
   background: #e1e1e2;
 }
@@ -88,6 +92,15 @@ code:not(.language-javascript) {
       & > li:not(:last-child) {
         border-right-color: #001529;
       }
+    }
+  }
+}
+
+#blog {
+  .block {
+    .blog-post-title {
+      font-size: 1rem;
+      font-weight: normal;
     }
   }
 }

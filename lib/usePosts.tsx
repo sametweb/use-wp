@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import Axios, { CancelTokenSource } from "axios";
 
-import { Post, PostRequestParams, Reducer, Hook, FetchWithParamsObject, State } from "./types";
+import { Post, PostRequestParams, Reducer, FetchWithParamsObject, State } from "./types";
 import { WPContext } from ".";
 
 type ActionType = "GET_POSTS_START" | "GET_POSTS_SUCCESS" | "GET_POSTS_ERROR";
@@ -27,7 +27,9 @@ const reducer: Reducer<Post[], ActionType> = (state = __initialState, action) =>
   }
 };
 
-const usePosts: Hook<State<Post[]>, FetchWithParamsObject<PostRequestParams>> = () => {
+export type UsePosts = () => [State<Post[]>, FetchWithParamsObject<PostRequestParams>];
+
+export const usePosts: UsePosts = () => {
   const wp = useContext(WPContext);
 
   const [posts, dispatch] = useReducer(reducer, __initialState);
@@ -72,5 +74,3 @@ const usePosts: Hook<State<Post[]>, FetchWithParamsObject<PostRequestParams>> = 
 
   return [posts, fetchPosts];
 };
-
-export default usePosts;

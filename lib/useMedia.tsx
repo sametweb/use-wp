@@ -26,7 +26,9 @@ const reducer: Reducer<Media, ActionType> = (state = __initialState as State<Med
   }
 };
 
-const useMedia: Hook<State<Media>, FetchWithRequiredIdentifier> = () => {
+export type UseMedia = () => [State<Media>, FetchWithRequiredIdentifier];
+
+export const useMedia: UseMedia = () => {
   const wp = useContext(WPContext);
   const [media, dispatch] = useReducer(reducer, __initialState as State<Media>);
 
@@ -66,5 +68,3 @@ const useMedia: Hook<State<Media>, FetchWithRequiredIdentifier> = () => {
 
   return [media, fetchMedia];
 };
-
-export default useMedia;

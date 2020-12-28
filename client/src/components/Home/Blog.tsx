@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { List } from "antd";
-import usePosts from "../../dist/usePosts";
-import { PostRequestParams } from "../../dist/types";
+import { usePosts, PostRequestParams } from "use-wp";
 import parse from "html-react-parser";
 
 function Blog() {
   const [params] = useState<PostRequestParams>({ per_page: 3 });
   const [posts, fetchPosts] = usePosts();
-
-  console.log({ posts });
 
   useEffect(() => {
     fetchPosts(params);
@@ -23,8 +20,15 @@ function Blog() {
       </p>
       {posts.error && <p>{posts.error}</p>}
       <List
-        size="large"
-        itemLayout="horizontal"
+        grid={{
+          gutter: 16,
+          xs: 1,
+          sm: 1,
+          md: 3,
+          lg: 3,
+          xl: 3,
+          xxl: 3,
+        }}
         dataSource={posts.data}
         loading={posts.loading}
         renderItem={(post) => (
@@ -35,13 +39,24 @@ function Blog() {
                   {parse(post.title.rendered)}
                 </Link>
               }
-              description={parse(post.excerpt.rendered)}
+              description={[
+                <React.Fragment key="parsed-content">
+                  {parse(post.excerpt.rendered)}
+                </React.Fragment>,
+                <Link key="read-more" to={"/blog/" + post.slug}>
+                  Read More
+                </Link>,
+              ]}
             />
           </List.Item>
         )}
       />
       <p>
         <Link to="/blog">Read all blog posts</Link>
+      </p>
+      <p>
+        The posts are received from my WordPress blog at{" "}
+        <a href="https://www.samet.web.tr">samet.web.tr</a> via WordPress's REST API.
       </p>
     </div>
   );

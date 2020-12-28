@@ -1,3 +1,5 @@
+export type { UseWP } from "./index";
+
 export interface Post {
   date: string | null;
   date_gmt: string | null;

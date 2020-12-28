@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useMedia from "../dist/useMedia";
+import { useMedia } from "use-wp";
 
 type Props = {
   id: string | number;
@@ -11,11 +11,11 @@ function FeaturedImage({ id, width }: Props) {
 
   useEffect(() => {
     fetchMedia(id);
-  }, []);
+  }, [fetchMedia, id]);
 
   return (
     <img
-      width={width}
+      style={{ maxWidth: width }}
       src={media.data.source_url}
       alt={media.data.alt_text}
       title={media.data.alt_text}

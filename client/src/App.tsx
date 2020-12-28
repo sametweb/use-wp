@@ -6,7 +6,7 @@ import Home from "./components/Home";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Blog from "./components/Blog";
 import Post from "./components/Post";
-import useWP from "./dist";
+import useWP from "use-wp";
 
 const { Footer, Content } = Layout;
 

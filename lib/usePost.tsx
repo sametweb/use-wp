@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import Axios, { CancelTokenSource } from "axios";
 
-import { FetchWithRequiredIdentifier, Post, Reducer, Hook, State } from "./types";
+import { FetchWithRequiredIdentifier, Post, Reducer, State } from "./types";
 import { WPContext } from ".";
 
 type ActionType = "GET_POST_START" | "GET_POST_SUCCESS" | "GET_POST_ERROR";
@@ -26,7 +26,9 @@ const reducer: Reducer<Post, ActionType> = (state = __initialState as State<Post
   }
 };
 
-const usePost: Hook<State<Post>, FetchWithRequiredIdentifier> = () => {
+export type UsePost = () => [State<Post>, FetchWithRequiredIdentifier];
+
+export const usePost: UsePost = () => {
   const wp = useContext(WPContext);
   const [post, dispatch] = useReducer(reducer, __initialState as State<Post>);
 
@@ -42,8 +44,10 @@ const usePost: Hook<State<Post>, FetchWithRequiredIdentifier> = () => {
   const fetchPost: FetchWithRequiredIdentifier = useCallback(
     (slug) => {
       dispatch({ type: "GET_POST_START" });
-
-      Axios.get<Post[]>(wp.urlWithPath + "/posts?slug=" + slug, { cancelToken: getSource().token })
+      const url = `${wp.urlWithPath}/posts?slug=${slug}&_embed=true`;
+      Axios.get<Post[]>(url, {
+        cancelToken: getSource().token,
+      })
         .then((post) => {
           dispatch({ type: "GET_POST_SUCCESS", payload: post.data[0] });
         })
@@ -66,5 +70,3 @@ const usePost: Hook<State<Post>, FetchWithRequiredIdentifier> = () => {
 
   return [post, fetchPost];
 };
-
-export default usePost;

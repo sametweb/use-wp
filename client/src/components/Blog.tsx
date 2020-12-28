@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { List, Space } from "antd";
-import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
+import { MessageOutlined } from "@ant-design/icons";
 import parse from "html-react-parser";
-import usePosts from "../dist/usePosts";
-import { PostRequestParams } from "../dist/types";
+import { usePosts, PostRequestParams } from "use-wp";
 import FeaturedImage from "./FeaturedImage";
 
 const per_page = 5;
@@ -35,7 +34,7 @@ function Blog() {
 
   useEffect(() => {
     fetchPosts(params);
-  }, []);
+  }, [fetchPosts, params]);
   return (
     <div className="blog">
       <div className="block">
@@ -62,8 +61,8 @@ function Blog() {
               <List.Item
                 key={post.id}
                 actions={[
-                  <IconText icon={StarOutlined} text="156" key="star" />,
-                  <IconText icon={LikeOutlined} text="156" key="like" />,
+                  // <IconText icon={StarOutlined} text="156" key="star" />,
+                  // <IconText icon={LikeOutlined} text="156" key="like" />,
                   <IconText
                     icon={MessageOutlined}
                     text={renderCommentCount(commentCount)}

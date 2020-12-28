@@ -1,10 +1,10 @@
 {
   "name": "use-wp",
-  "version": "0.0.2",
-  "description": "A library to connect to your WordPress blog via React Hooks",
+  "version": "0.0.20",
+  "description": "Connect to your WordPress blog via custom React Hooks",
   "author": "Samet Mutevelli <mutevellisamet@gmail.com> (https://sametmutevelli.com)",
-  "main": "client/src/dist/index",
-  "types": "client/src/dist/types.d.ts",
+  "main": "client/src/dist/index.js",
+  "types": "client/src/dist/index.d.ts",
   "module": "client/src/dist/index.js",
   "files": [
     "client/src/dist",
