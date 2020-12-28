@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { List } from "antd";
-import parseJSX from "../../dist/utils/parseJSX";
 import usePosts from "../../dist/usePosts";
 import { PostRequestParams } from "../../dist/types";
+import parse from "html-react-parser";
 
 function Blog() {
   const [params] = useState<PostRequestParams>({ per_page: 3 });
   const [posts, fetchPosts] = usePosts();
 
+  console.log({ posts });
+
   useEffect(() => {
     fetchPosts(params);
-  }, []);
+  }, [fetchPosts, params]);
 
   return (
     <div className="block">
@@ -30,10 +32,10 @@ function Blog() {
             <List.Item.Meta
               title={
                 <Link className="blog-post-title" to={"/blog/" + post.slug}>
-                  {parseJSX(post.title.rendered)}
+                  {parse(post.title.rendered)}
                 </Link>
               }
-              description={parseJSX(post.excerpt.rendered)}
+              description={parse(post.excerpt.rendered)}
             />
           </List.Item>
         )}

@@ -27,8 +27,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.0",
-    "html-react-parser": "^0.14.1"
+    "axios": "^0.21.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.56",

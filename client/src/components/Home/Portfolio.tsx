@@ -5,22 +5,23 @@ import { GithubOutlined, DesktopOutlined } from "@ant-design/icons";
 function Portfolio() {
   const data = [
     {
-      title: "use-wp",
+      title: "use-wp: WordPress-React Connector",
       description:
-        "A React library for connecting existing WordPress blogs to a React application.",
+        "A React library for connecting existing WordPress blogs to a React application via WordPress's built-in REST API.",
       repo: "https://github.com/sametweb/use-wp",
       project: "https://www.npmjs.com/package/use-wp",
     },
     {
-      title: "react-step-builder",
+      title: "React Step Builder",
       description:
         "A React library for creating multi-step interfaces (e.g. forms) with global state.",
       repo: "https://github.com/sametweb/react-step-builder",
       project: "https://www.npmjs.com/package/react-step-builder",
     },
     {
-      title: "omitURL",
-      description: "A URL shortening service as a full-stack web application and Chrome Extension.",
+      title: "URL Shortener as Browser Extension",
+      description:
+        "A URL shortening service as a full-stack web application integrated with a Google Chrome Browser Extension.",
       repo: "https://github.com/sametweb/url-shortener",
       project: "https://omiturl.com",
     },
@@ -53,8 +54,12 @@ function Portfolio() {
               title={item.title}
               bordered={false}
               actions={[
-                <GithubOutlined style={{ fontSize: 18 }} />,
-                <DesktopOutlined style={{ fontSize: 18 }} />,
+                <a href={item.repo} target="_blank" rel="noreferrer">
+                  <GithubOutlined style={{ fontSize: 18 }} />
+                </a>,
+                <a href={item.project} target="_blank" rel="noreferrer">
+                  <DesktopOutlined style={{ fontSize: 18 }} />
+                </a>,
               ]}
             >
               {item.description}

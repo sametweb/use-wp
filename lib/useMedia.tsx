@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import Axios, { CancelTokenSource } from "axios";
 
-import { FetchWithRequiredIdentifier, Post, Reducer, Hook, State } from "./types";
+import { FetchWithRequiredIdentifier, Media, Reducer, Hook, State } from "./types";
 import { WPContext } from ".";
 
-type ActionType = "GET_POST_START" | "GET_POST_SUCCESS" | "GET_POST_ERROR";
+type ActionType = "GET_MEDIA_START" | "GET_MEDIA_SUCCESS" | "GET_MEDIA_ERROR";
 
 const __initialState = {
   data: {},
@@ -12,23 +12,23 @@ const __initialState = {
   error: "",
 };
 
-const reducer: Reducer<Post, ActionType> = (state = __initialState as State<Post>, action) => {
+const reducer: Reducer<Media, ActionType> = (state = __initialState as State<Media>, action) => {
   const { payload } = action;
   switch (action.type) {
-    case "GET_POST_START":
+    case "GET_MEDIA_START":
       return { ...state, loading: true, error: "" };
-    case "GET_POST_SUCCESS":
+    case "GET_MEDIA_SUCCESS":
       return { ...state, loading: false, data: payload };
-    case "GET_POST_ERROR":
-      return { ...state, loading: false, error: "Error fetching posts" };
+    case "GET_MEDIA_ERROR":
+      return { ...state, loading: false, error: "Error fetching media" };
     default:
       return state;
   }
 };
 
-const usePost: Hook<State<Post>, FetchWithRequiredIdentifier> = () => {
+const useMedia: Hook<State<Media>, FetchWithRequiredIdentifier> = () => {
   const wp = useContext(WPContext);
-  const [post, dispatch] = useReducer(reducer, __initialState as State<Post>);
+  const [media, dispatch] = useReducer(reducer, __initialState as State<Media>);
 
   const source = useRef<CancelTokenSource | null>(null);
 
@@ -39,19 +39,19 @@ const usePost: Hook<State<Post>, FetchWithRequiredIdentifier> = () => {
     return source.current;
   }
 
-  const fetchPost: FetchWithRequiredIdentifier = useCallback(
-    (slug) => {
-      dispatch({ type: "GET_POST_START" });
+  const fetchMedia: FetchWithRequiredIdentifier = useCallback(
+    (id) => {
+      dispatch({ type: "GET_MEDIA_START" });
 
-      Axios.get<Post[]>(wp.urlWithPath + "/posts?slug=" + slug, { cancelToken: getSource().token })
-        .then((post) => {
-          dispatch({ type: "GET_POST_SUCCESS", payload: post.data[0] });
+      Axios.get<Media>(wp.urlWithPath + "/media/" + id, { cancelToken: getSource().token })
+        .then((media) => {
+          dispatch({ type: "GET_MEDIA_SUCCESS", payload: media.data });
         })
         .catch((error) => {
           if (Axios.isCancel(error)) {
             console.log(error);
           } else {
-            dispatch({ type: "GET_POST_ERROR" });
+            dispatch({ type: "GET_MEDIA_ERROR" });
           }
         });
     },
@@ -64,7 +64,7 @@ const usePost: Hook<State<Post>, FetchWithRequiredIdentifier> = () => {
     };
   }, []);
 
-  return [post, fetchPost];
+  return [media, fetchMedia];
 };
 
-export default usePost;
+export default useMedia;

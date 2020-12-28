@@ -6,12 +6,12 @@ import Home from "./components/Home";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Blog from "./components/Blog";
 import Post from "./components/Post";
-import useWp from "./dist";
+import useWP from "./dist";
 
 const { Footer, Content } = Layout;
 
 function App() {
-  const WordPressProvider = useWp("https://samet.web.tr");
+  const WordPressProvider = useWP("https://samet.web.tr");
 
   return (
     <Router>
@@ -21,7 +21,7 @@ function App() {
           <Layout>
             <Content>
               <Route path="/" exact component={Home} />
-              <Route path={"/blog"} exact component={Blog} />
+              <Route path={["/blog", "/blog/page/:page_number"]} exact component={Blog} />
               <Route path={"/blog/:slug"} exact component={Post} />
             </Content>
           </Layout>

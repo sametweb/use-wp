@@ -6,7 +6,7 @@ interface ProviderProps {
   children: ReactNode;
 }
 
-const useWp = (url: string) => {
+const useWP = (url: string) => {
   const value = {
     url,
     urlWithPath: url + "/wp-json/wp/v2",
@@ -19,4 +19,4 @@ const useWp = (url: string) => {
   return Provider;
 };
 
-export default useWp;
+export default useWP;

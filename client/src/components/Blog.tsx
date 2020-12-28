@@ -2,9 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { List, Space } from "antd";
 import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
-import parseJSX from "../dist/utils/parseJSX";
+import parse from "html-react-parser";
 import usePosts from "../dist/usePosts";
 import { PostRequestParams } from "../dist/types";
+import FeaturedImage from "./FeaturedImage";
+
+const per_page = 5;
+const cat_id = 6;
+
+const renderCommentCount = (count: number) => {
+  return count < 1 ? "0 Comment" : count > 1 ? count + " Comments" : count + " Comment";
+};
 
 function Blog() {
   const [posts, fetchPosts] = usePosts();
@@ -12,7 +20,11 @@ function Blog() {
   const { page_number } = useParams<{ page_number: string }>();
   const history = useHistory();
 
-  const [params, setParams] = useState<PostRequestParams>({ page: page_number, per_page: 3 });
+  const [params, setParams] = useState<PostRequestParams>({
+    page: page_number,
+    per_page,
+    categories: cat_id,
+  });
 
   const IconText = ({ icon, text }: { icon: any; text: string }) => (
     <Space>
@@ -22,14 +34,14 @@ function Blog() {
   );
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(params);
   }, []);
   return (
     <div className="blog">
       <div className="block">
         <List
+          loading={posts.loading}
           itemLayout="vertical"
-          // loading={postsLoading}
           size="large"
           pagination={{
             total: posts.count,
@@ -37,42 +49,36 @@ function Blog() {
               history.push("/blog/page/" + page);
               setParams({ ...params, page });
             },
-            pageSize: 3,
+            pageSize: per_page,
             defaultCurrent: Number(page_number),
           }}
           dataSource={posts.data}
-          footer={
-            <div>
-              <b>ant design</b> footer part
-            </div>
-          }
-          renderItem={(post) => (
-            <List.Item
-              key={post.id}
-              actions={[
-                <IconText icon={StarOutlined} text="156" key="star" />,
-                <IconText icon={LikeOutlined} text="156" key="like" />,
-                <IconText icon={MessageOutlined} text="2" key="comment" />,
-              ]}
-              extra={
-                <img
-                  width={272}
-                  alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+          footer={<div>Total {posts.count} posts</div>}
+          renderItem={(post) => {
+            let commentCount;
+            if (post._embedded.replies) commentCount = post._embedded.replies[0].length;
+            else commentCount = 0;
+            return (
+              <List.Item
+                key={post.id}
+                actions={[
+                  <IconText icon={StarOutlined} text="156" key="star" />,
+                  <IconText icon={LikeOutlined} text="156" key="like" />,
+                  <IconText
+                    icon={MessageOutlined}
+                    text={renderCommentCount(commentCount)}
+                    key="comment"
+                  />,
+                ]}
+                extra={<FeaturedImage width={272} id={post.featured_media} />}
+              >
+                <List.Item.Meta
+                  title={<Link to={`/blog/${post.slug}`}>{parse(post.title.rendered)}</Link>}
                 />
-              }
-            >
-              <List.Item.Meta
-                title={
-                  <Link to={{ pathname: `/blog/${post.slug}`, state: post }}>
-                    {parseJSX(post.title.rendered)}
-                  </Link>
-                }
-                description={post.date}
-              />
-              {parseJSX(post.excerpt.rendered)}
-            </List.Item>
-          )}
+                {parse(post.excerpt.rendered)}
+              </List.Item>
+            );
+          }}
         />
       </div>
     </div>

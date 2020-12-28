@@ -1,7 +1,7 @@
-import { useContext, useEffect, useReducer, useRef } from "react";
+import { useCallback, useContext, useEffect, useReducer, useRef } from "react";
 import Axios, { CancelTokenSource } from "axios";
 
-import { Post, PostRequestParams, Reducer, Hook, FetchItems, State } from "./types";
+import { Post, PostRequestParams, Reducer, Hook, FetchWithParamsObject, State } from "./types";
 import { WPContext } from ".";
 
 type ActionType = "GET_POSTS_START" | "GET_POSTS_SUCCESS" | "GET_POSTS_ERROR";
@@ -27,7 +27,7 @@ const reducer: Reducer<Post[], ActionType> = (state = __initialState, action) =>
   }
 };
 
-const usePosts: Hook<State<Post[]>, FetchItems<PostRequestParams>> = () => {
+const usePosts: Hook<State<Post[]>, FetchWithParamsObject<PostRequestParams>> = () => {
   const wp = useContext(WPContext);
 
   const [posts, dispatch] = useReducer(reducer, __initialState);
@@ -41,22 +41,28 @@ const usePosts: Hook<State<Post[]>, FetchItems<PostRequestParams>> = () => {
     return source.current;
   }
 
-  const fetchPosts: FetchItems<PostRequestParams> = (params?: PostRequestParams) => {
-    dispatch({ type: "GET_POSTS_START" });
+  const fetchPosts: FetchWithParamsObject<PostRequestParams> = useCallback(
+    (params?: PostRequestParams) => {
+      dispatch({ type: "GET_POSTS_START" });
 
-    Axios.get<Post[]>(wp.urlWithPath + "/posts", { cancelToken: getSource().token, params })
-      .then((posts) => {
-        const payload = { data: posts.data, count: Number(posts.headers["x-wp-total"]) };
-        dispatch({ type: "GET_POSTS_SUCCESS", payload });
+      Axios.get<Post[]>(wp.urlWithPath + "/posts?_embed=true", {
+        cancelToken: getSource().token,
+        params,
       })
-      .catch((error) => {
-        if (Axios.isCancel(error)) {
-          console.log(error);
-        } else {
-          dispatch({ type: "GET_POSTS_ERROR" });
-        }
-      });
-  };
+        .then((posts) => {
+          const payload = { data: posts.data, count: Number(posts.headers["x-wp-total"]) };
+          dispatch({ type: "GET_POSTS_SUCCESS", payload });
+        })
+        .catch((error) => {
+          if (Axios.isCancel(error)) {
+            console.log(error);
+          } else {
+            dispatch({ type: "GET_POSTS_ERROR" });
+          }
+        });
+    },
+    [wp.urlWithPath]
+  );
 
   useEffect(() => {
     return () => {

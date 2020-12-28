@@ -1,7 +1,7 @@
 import { useCallback, useContext, useReducer } from "react";
 import Axios from "axios";
 
-import { Page, Reducer, Hook, State, FetchItem } from "./types";
+import { Page, Reducer, Hook, State, FetchWithRequiredIdentifier } from "./types";
 import { WPContext } from ".";
 
 type ActionType = "GET_PAGE_START" | "GET_PAGE_SUCCESS" | "GET_PAGE_ERROR";
@@ -26,12 +26,12 @@ const reducer: Reducer<Page, ActionType> = (state = __initialState as State<Page
   }
 };
 
-const usePage: Hook<State<Page>, FetchItem> = () => {
+const usePage: Hook<State<Page>, FetchWithRequiredIdentifier> = () => {
   const wp = useContext(WPContext);
 
   const [page, dispatch] = useReducer(reducer, __initialState as State<Page>);
 
-  const fetchPage: FetchItem = useCallback(
+  const fetchPage: FetchWithRequiredIdentifier = useCallback(
     (slug) => {
       dispatch({ type: "GET_PAGE_START" });
 

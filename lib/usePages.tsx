@@ -1,7 +1,7 @@
 import { useContext, useReducer } from "react";
 import Axios from "axios";
 
-import { FetchItems, Page, PageRequestParams, Reducer, Hook, State } from "./types";
+import { FetchWithParamsObject, Page, PageRequestParams, Reducer, Hook, State } from "./types";
 import { WPContext } from ".";
 
 type ActionType = "GET_PAGES_START" | "GET_PAGES_SUCCESS" | "GET_PAGES_ERROR";
@@ -27,12 +27,12 @@ const reducer: Reducer<Page[], ActionType> = (state = __initialState, action) =>
   }
 };
 
-const usePages: Hook<State<Page[]>, FetchItems<PageRequestParams>> = () => {
+const usePages: Hook<State<Page[]>, FetchWithParamsObject<PageRequestParams>> = () => {
   const wp = useContext(WPContext);
 
   const [pages, dispatch] = useReducer(reducer, __initialState);
 
-  const fetchPages: FetchItems<PageRequestParams> = (params) => {
+  const fetchPages: FetchWithParamsObject<PageRequestParams> = (params) => {
     dispatch({ type: "GET_PAGES_START" });
 
     Axios.get<Page[]>(wp.urlWithPath + "/pages", { params })

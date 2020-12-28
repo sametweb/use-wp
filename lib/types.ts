@@ -25,6 +25,75 @@ export interface Post {
   template: string;
   categories: number[];
   tags: number[];
+  _embedded: EmbeddedPostProperties;
+}
+
+export interface EmbeddedPostProperties {
+  author: {};
+  replies?: Array<
+    Array<{
+      author: number;
+      author_avatar_urls: {
+        24: string;
+        48: string;
+        96: string;
+      };
+      author_name: string;
+      author_url: string;
+      content: { rendered: string };
+      date: string;
+      id: number;
+      link: string;
+      parent: number;
+      type: string;
+    }>
+  >;
+  "wp:featuredmedia"?: Array<{
+    alt_text: string;
+    author: number;
+    caption: { rendered: string };
+    date: string;
+    id: number;
+    link: string;
+    media_details: {
+      file: string;
+      width: number;
+      height: number;
+      image_meta: {};
+      sizes: {
+        full: {
+          file: string;
+          width: number;
+          height: number;
+          mime_type: string;
+          source_url: string;
+        };
+        medium: {
+          file: string;
+          width: number;
+          height: number;
+          mime_type: string;
+          source_url: string;
+        };
+        thumbnail: {
+          file: string;
+          width: number;
+          height: number;
+          mime_type: string;
+          source_url: string;
+        };
+      };
+    };
+    media_type: string;
+    mime_type: string;
+    slug: string;
+    source_url: string;
+    title: { rendered: string };
+    type: string;
+  }>;
+  "wp:term"?: Array<
+    Array<{ id: number; link: string; name: string; slug: string; taxonomy: string }>
+  >;
 }
 
 export interface PostRequestParams {
@@ -301,8 +370,8 @@ export interface State<T> {
   error: string;
 }
 
-export type FetchItems<P> = (params?: P) => void;
-export type FetchItem = (slug: string) => void;
+export type FetchWithParamsObject<P> = (params?: P) => void;
+export type FetchWithRequiredIdentifier = (slug: number | string) => void;
 export type Action<T> = { type: T; payload?: any };
 export type Reducer<S, A> = (state: State<S>, action: Action<A>) => State<S>;
 export type Hook<T, P> = () => [T, P];
