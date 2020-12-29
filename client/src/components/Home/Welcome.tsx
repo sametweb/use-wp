@@ -32,15 +32,8 @@ function Welcome() {
       <Row justify="center">
         {images.map(({ name, level }, index) => {
           return (
-            <Col xs={12} sm={8} md={4}>
-              <LanguageLogoRenderer
-                key={name}
-                alt={name}
-                level={level}
-                index={index}
-                size={80}
-                margin={20}
-              />
+            <Col xs={12} sm={8} md={4} key={name}>
+              <LanguageLogoRenderer alt={name} level={level} index={index} size={80} margin={20} />
             </Col>
           );
         })}
