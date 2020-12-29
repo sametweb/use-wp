@@ -8,7 +8,6 @@ interface LanguageLogoRendererProps {
   alt: string;
   level: number;
 }
-const brs = [2, 6, 10];
 
 const LanguageLogoRenderer = ({ alt, index, size, margin, level }: LanguageLogoRendererProps) => {
   return (
@@ -31,7 +30,6 @@ const LanguageLogoRenderer = ({ alt, index, size, margin, level }: LanguageLogoR
           </span>
         </span>
       </Tooltip>
-      {brs.includes(index) && <br />}
     </>
   );
 };
