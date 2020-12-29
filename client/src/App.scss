@@ -16,7 +16,7 @@ code:not(.language-javascript) {
   .block {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 75px 50px;
     text-align: center;
     h2 {
       font-size: 2.5rem;
@@ -24,6 +24,7 @@ code:not(.language-javascript) {
     .welcome-text {
       font-size: 1.4rem;
       font-weight: 300;
+      padding: 0 0 3rem 0;
     }
 
     .language-logo {
@@ -58,6 +59,10 @@ code:not(.language-javascript) {
         }
       }
     }
+    .blog-post-title {
+      font-size: 1rem;
+      font-weight: normal;
+    }
   }
   &.dark-bg {
     background-color: #001529;
@@ -66,7 +71,7 @@ code:not(.language-javascript) {
     }
     .blog-post-title {
       color: #e6f7ff;
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
     .ant-card,
     .ant-card-actions {
@@ -96,20 +101,11 @@ code:not(.language-javascript) {
   }
 }
 
-#blog {
-  .block {
-    .blog-post-title {
-      font-size: 1rem;
-      font-weight: normal;
-    }
-  }
-}
-
 .blog {
   .block {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 64px 50px;
   }
 
   .blog-post-title {
@@ -120,7 +116,7 @@ code:not(.language-javascript) {
 .post {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 3rem 0;
+  padding: 3rem 1rem;
   h2 {
     font-size: 2.5rem;
   }
