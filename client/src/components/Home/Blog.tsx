@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { List } from "antd";
 import { usePosts, PostRequestParams } from "use-wp";
 import parse from "html-react-parser";
+import Loading from "../Loading";
 
 function Blog() {
   const [params] = useState<PostRequestParams>({ per_page: 3 });
@@ -20,6 +21,7 @@ function Blog() {
       </p>
       {posts.error && <p>{posts.error}</p>}
       <List
+        style={{ minHeight: 300 }}
         grid={{
           gutter: 16,
           xs: 1,
@@ -30,7 +32,7 @@ function Blog() {
           xxl: 3,
         }}
         dataSource={posts.data}
-        loading={posts.loading}
+        loading={{ spinning: posts.loading, indicator: <Loading /> }}
         renderItem={(post) => (
           <List.Item>
             <List.Item.Meta

@@ -38,7 +38,7 @@ function Header() {
       <div className="logo">
         <Link to="/">
           <img
-            src="./logo32.png"
+            src="/logo32.png"
             width="32"
             height="32"
             alt="Logo for Samet Mutevelli's Portfolio"

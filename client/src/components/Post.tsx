@@ -5,7 +5,7 @@ import parse, { domToReact } from "html-react-parser";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import FeaturedImage from "./FeaturedImage";
-import { Spin } from "antd";
+import Loading from "./Loading";
 
 function Post() {
   const params = useParams<{ slug: string }>();
@@ -16,13 +16,12 @@ function Post() {
     fetchPost(params.slug);
   }, [fetchPost, params.slug]);
 
-  if (post.loading) {
-    return (
-      <div style={{ height: 500, display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <Spin />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (post.data.title?.rendered) {
+      document.title =
+        post.data.title.rendered.replace(/(<([^>]+)>)/gi, "") + " | " + document.title;
+    }
+  }, [post.data.title?.rendered]);
 
   const options = {
     replace: ({ name, children }: { name: string; children: JSX.Element[] }) => {
@@ -35,8 +34,9 @@ function Post() {
       }
     },
   };
-  console.log(post.data);
-  return (
+  return post.loading ? (
+    <Loading />
+  ) : (
     <div className="post">
       <h2>{parse(post.data.title.rendered)}</h2>
       <div className="featured">

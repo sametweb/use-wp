@@ -5,6 +5,7 @@ import { MessageOutlined } from "@ant-design/icons";
 import parse from "html-react-parser";
 import { usePosts, PostRequestParams } from "use-wp";
 import FeaturedImage from "./FeaturedImage";
+import Loading from "./Loading";
 
 const per_page = 5;
 const cat_id = 6;
@@ -35,11 +36,12 @@ function Blog() {
   useEffect(() => {
     fetchPosts(params);
   }, [fetchPosts, params]);
-  return (
+  return posts.loading ? (
+    <Loading />
+  ) : (
     <div className="blog">
       <div className="block">
         <List
-          loading={posts.loading}
           itemLayout="vertical"
           size="large"
           pagination={{
