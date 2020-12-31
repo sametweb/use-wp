@@ -37,12 +37,7 @@ function Header() {
     >
       <div className="logo">
         <Link to="/">
-          <img
-            src="/logo32.png"
-            width="32"
-            height="32"
-            alt="Logo for Samet Mutevelli's Portfolio"
-          />
+          <img src="/logo.svg" width="32" height="32" alt="Logo for Samet Mutevelli's Portfolio" />
         </Link>
       </div>
       <Menu theme="dark" mode="horizontal" selectedKeys={[]}>

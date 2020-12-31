@@ -52,7 +52,7 @@ function Welcome() {
       </p>
       <h2>Welcome!</h2>
       <p className="welcome-text">
-        My name is Samet Mütevelli. I am a software engineer specializing in full-stack web
+        My name is Samet Mütevelli. I am a software developer specializing in full-stack web
         applications with JavaScript and TypeScript. These are the languages, frameworks, and
         libraries I am familiar with.
       </p>
