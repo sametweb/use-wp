@@ -1,3 +1,4 @@
+import React from "react";
 import {
   GithubFilled,
   LinkedinFilled,
@@ -5,7 +6,6 @@ import {
   YoutubeFilled,
 } from "@ant-design/icons";
 import { Col, Row } from "antd";
-import React from "react";
 
 import LanguageLogoRenderer from "../LanguageLogoRenderer";
 
@@ -27,28 +27,39 @@ function Welcome() {
     { name: "Ant Design", level: 90 },
   ];
 
+  const socialIcons = [
+    {
+      href: "https://linkedin.com/in/samet-mutevelli",
+      component: LinkedinFilled,
+      color: "#0073b1",
+    },
+    {
+      href: "https://github.com/sametweb",
+      component: GithubFilled,
+      color: "#24292e",
+    },
+    {
+      href: "https://twitter.com/sametmutevelli",
+      component: TwitterSquareFilled,
+      color: "rgb(29, 161, 242)",
+    },
+    {
+      href: "https://youtube.com/c/reactdersleri",
+      component: YoutubeFilled,
+      color: "rgb(255, 0, 0)",
+    },
+  ];
+
   return (
     <div className="block">
-      <p
-        style={{
-          width: 200,
-          margin: "0 auto 2rem",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <a href="https://linkedin.com/in/samet-mutevelli" target="_blank" rel="noreferrer">
-          <LinkedinFilled style={{ fontSize: 40, color: "#0073b1" }} />
-        </a>
-        <a href="https://github.com/sametweb" target="_blank" rel="noreferrer">
-          <GithubFilled style={{ fontSize: 40, color: "#24292e" }} />
-        </a>
-        <a href="https://twitter.com/sametmutevelli" target="_blank" rel="noreferrer">
-          <TwitterSquareFilled style={{ fontSize: 40, color: "rgb(29, 161, 242)" }} />
-        </a>
-        <a href="https://youtube.com/c/reactdersleri" target="_blank" rel="noreferrer">
-          <YoutubeFilled style={{ fontSize: 40, color: "rgb(255, 0, 0)" }} />
-        </a>
+      <p className="social-icons">
+        {socialIcons.map(({ href, component: Component, color }) => {
+          return (
+            <a href={href} target="_blank" rel="noreferrer">
+              <Component style={{ fontSize: 40, color }} />
+            </a>
+          );
+        })}
       </p>
       <h2>Welcome!</h2>
       <p className="welcome-text">

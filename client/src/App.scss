@@ -35,6 +35,14 @@ code:not(.language-javascript) {
       font-size: 1.6rem;
       font-weight: normal;
     }
+
+    .social-icons {
+      width: 200px;
+      margin: 0 auto 2rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
     .welcome-text {
       font-size: 1.4rem;
       font-weight: 300;
